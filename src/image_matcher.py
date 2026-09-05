@@ -31,4 +31,19 @@ for m, n in matches:
         good_matches.append(m)
 
 print("Total matches:", len(matches))
-print("Good matches:", len(good_matches))
+print("Good matches:", len(good_matches)) 
+# Good matches ko image par draw karo
+matched_image = cv2.drawMatches(
+    image_a,
+    keypoints_a,
+    image_b,
+    keypoints_b,
+    good_matches,
+    None,
+    flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
+)
+
+# Result save karo
+cv2.imwrite("outputs/matched_features.png", matched_image)
+
+print("Matched image saved to outputs/matched_features.png")
