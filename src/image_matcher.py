@@ -13,3 +13,22 @@ keypoints_b, descriptors_b = sift.detectAndCompute(image_b, None)
 
 print("Image A features:", len(keypoints_a))
 print("Image B features:", len(keypoints_b))
+# Feature matcher
+matcher = cv2.BFMatcher()
+
+# Har feature ko doosri image ke features se compare karo
+matches = matcher.knnMatch(
+    descriptors_a,
+    descriptors_b,
+    k=2
+)
+
+# Lowe's Ratio Test se good matches select karo
+good_matches = []
+
+for m, n in matches:
+    if m.distance < 0.75 * n.distance:
+        good_matches.append(m)
+
+print("Total matches:", len(matches))
+print("Good matches:", len(good_matches))
