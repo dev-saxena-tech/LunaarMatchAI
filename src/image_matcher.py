@@ -1,5 +1,5 @@
 import cv2
-
+import numpy as np
 # Dono test images load karo
 image_a = cv2.imread("dataset/image_A.png", cv2.IMREAD_GRAYSCALE)
 image_b = cv2.imread("dataset/image_B.png", cv2.IMREAD_GRAYSCALE)
@@ -46,4 +46,49 @@ matched_image = cv2.drawMatches(
 # Result save karo
 cv2.imwrite("outputs/matched_features.png", matched_image)
 
-print("Matched image saved to outputs/matched_features.png")
+print("Matched image saved to outputs/matched_features.png") 
+# Good matches se point coordinates nikalo
+src_pts = np.float32(
+    [keypoints_a[m.queryIdx].pt for m in good_matches]
+).reshape(-1, 1, 2)
+
+dst_pts = np.float32(
+    [keypoints_b[m.trainIdx].pt for m in good_matches]
+).reshape(-1, 1, 2)
+
+# RANSAC se Homography find karo
+homography_matrix, mask = cv2.findHomography(
+    src_pts,
+    dst_pts,
+    cv2.RANSAC,
+    5.0
+)
+
+# Valid matches (inliers) count karo
+inliers = int(mask.sum())
+
+print("Inliers after RANSAC:", inliers)
+print("Inlier ratio:", inliers / len(good_matches)) 
+# Image A ko Image B ke according align karo
+height, width = image_b.shape
+
+registered_image = cv2.warpPerspective(
+    image_a,
+    homography_matrix,
+    (width, height)
+)
+
+# Registered image save karo
+cv2.imwrite(
+    "outputs/registered_image.png",
+    registered_image
+)
+
+print("Registered image saved to outputs/registered_image.png") 
+# Registration quality metrics
+inlier_ratio_percent = (inliers / len(good_matches)) * 100
+
+print("\n--- Registration Metrics ---")
+print("Good matches:", len(good_matches))
+print("RANSAC inliers:", inliers)
+print("Inlier ratio: {:.2f}%".format(inlier_ratio_percent))
