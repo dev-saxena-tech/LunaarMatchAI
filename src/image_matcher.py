@@ -84,6 +84,11 @@ homography_matrix, mask = cv2.findHomography(
     5.0
 )
 
+# Check karo ki Homography successfully calculate hui hai
+if homography_matrix is None or mask is None:
+    print("Error: Could not calculate a reliable homography.")
+    raise SystemExit
+
 # Valid matches (inliers) count karo
 inliers = int(mask.sum())
 
