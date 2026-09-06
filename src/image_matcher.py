@@ -47,6 +47,16 @@ matched_image = cv2.drawMatches(
 cv2.imwrite("outputs/matched_features.png", matched_image)
 
 print("Matched image saved to outputs/matched_features.png") 
+# Homography ke liye kam se kam 4 matches zaroori hain
+if len(good_matches) < 4:
+    print("Not enough good matches for reliable registration.")
+    raise SystemExit
+
+# Homography ke liye kam se kam 4 matches zaroori hain
+if len(good_matches) < 4:
+    print("Not enough good matches for reliable registration.")
+    raise SystemExit
+
 # Good matches se point coordinates nikalo
 src_pts = np.float32(
     [keypoints_a[m.queryIdx].pt for m in good_matches]
