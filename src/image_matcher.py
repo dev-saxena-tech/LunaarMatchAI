@@ -91,4 +91,20 @@ inlier_ratio_percent = (inliers / len(good_matches)) * 100
 print("\n--- Registration Metrics ---")
 print("Good matches:", len(good_matches))
 print("RANSAC inliers:", inliers)
-print("Inlier ratio: {:.2f}%".format(inlier_ratio_percent))
+print("Inlier ratio: {:.2f}%".format(inlier_ratio_percent)) 
+# Registered image aur Image B ko blend karo
+overlay = cv2.addWeighted(
+    registered_image,
+    0.5,
+    image_b,
+    0.5,
+    0
+)
+
+# Overlay result save karo
+cv2.imwrite(
+    "outputs/overlay.png",
+    overlay
+)
+
+print("Overlay image saved to outputs/overlay.png")
