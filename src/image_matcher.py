@@ -4,6 +4,11 @@ import numpy as np
 image_a = cv2.imread("dataset/image_A.png", cv2.IMREAD_GRAYSCALE)
 image_b = cv2.imread("dataset/image_B.png", cv2.IMREAD_GRAYSCALE)
 
+# Check karo ki images successfully load hui hain
+if image_a is None or image_b is None:
+    print("Error: Could not load input images.")
+    raise SystemExit
+
 # SIFT feature detector
 sift = cv2.SIFT_create()
 
@@ -13,6 +18,11 @@ keypoints_b, descriptors_b = sift.detectAndCompute(image_b, None)
 
 print("Image A features:", len(keypoints_a))
 print("Image B features:", len(keypoints_b))
+
+# Check karo ki descriptors available hain
+if descriptors_a is None or descriptors_b is None:
+    print("Error: Could not detect usable features in one or both images.")
+    raise SystemExit
 # Feature matcher
 matcher = cv2.BFMatcher()
 
