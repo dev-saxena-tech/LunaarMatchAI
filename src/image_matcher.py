@@ -102,18 +102,24 @@ registered_image = cv2.warpPerspective(
     homography_matrix,
     (width, height)
 )
-# Registration error calculate karo
-projected_pts = cv2.perspectiveTransform(
-    src_pts,
+# Sirf RANSAC inlier points select karo
+inlier_mask = mask.ravel().astype(bool)
+inlier_src_pts = src_pts[inlier_mask]
+inlier_dst_pts = dst_pts[inlier_mask]
+
+# Sirf reliable inlier points ko project karo
+projected_inlier_pts = cv2.perspectiveTransform(
+    inlier_src_pts,
     homography_matrix
 )
 
-errors = np.linalg.norm(
-    projected_pts - dst_pts,
+# Inlier registration error calculate karo
+inlier_errors = np.linalg.norm(
+    projected_inlier_pts - inlier_dst_pts,
     axis=2
 )
 
-mean_error = np.mean(errors)
+mean_error = float(np.mean(inlier_errors))
 
 print("Mean registration error: {:.2f} pixels".format(mean_error))
 # Registered image save karo
