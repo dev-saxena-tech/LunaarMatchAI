@@ -77,7 +77,20 @@ registered_image = cv2.warpPerspective(
     homography_matrix,
     (width, height)
 )
+# Registration error calculate karo
+projected_pts = cv2.perspectiveTransform(
+    src_pts,
+    homography_matrix
+)
 
+errors = np.linalg.norm(
+    projected_pts - dst_pts,
+    axis=2
+)
+
+mean_error = np.mean(errors)
+
+print("Mean registration error: {:.2f} pixels".format(mean_error))
 # Registered image save karo
 cv2.imwrite(
     "outputs/registered_image.png",
